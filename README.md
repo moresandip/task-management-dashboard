@@ -1,41 +1,41 @@
-# FocusBoard – Task Management Dashboard
+# FocusBoard - Task Management Dashboard
 
-> A pixel-perfect, fully responsive, and accessible task management dashboard built with **React**, **Vite**, and **Vanilla CSS3**, designed strictly in accordance with the official company Figma design specification across Desktop (1440 × 1000), Tablet (768px), and Mobile (390 × 1128) viewports.
-
----
-
-## 📋 Table of Contents
-1. [Project Overview & Objective](#-project-overview--objective)
-2. [Technology Stack & Rationale](#-technology-stack--rationale)
-3. [Key Features Implemented](#-key-features-implemented)
-4. [State Management Architecture](#-state-management-architecture)
-5. [Browser Persistence (localStorage)](#-browser-persistence-localstorage)
-6. [Multi-Tab Navigation & Authentication](#-multi-tab-navigation--authentication)
-7. [Dark & Light Theming Engine](#-dark--light-theming-engine)
-8. [Design Fidelity & Responsive Breakpoints](#-design-fidelity--responsive-breakpoints)
-9. [Screenshots](#-screenshots)
-10. [Folder Structure](#-folder-structure)
-11. [Installation & Local Setup Guide](#-installation--local-setup-guide)
-12. [Automated Testing & Verification](#-automated-testing--verification)
-13. [Accessibility Compliance (A11y)](#-accessibility-compliance-a11y)
-14. [Final Candidate Submission Template](#-final-candidate-submission-template)
+> A pixel-perfect, fully responsive, and accessible task management dashboard built with **React**, **Vite**, and **Vanilla CSS3**, designed strictly in accordance with the official company Figma design specification across Desktop (1440 x 1000), Tablet (768px), and Mobile (390 x 1128) viewports.
 
 ---
 
-## 🎯 Project Overview & Objective
+## Table of Contents
+1. [Project Overview & Objective](#project-overview--objective)
+2. [Technology Stack & Rationale](#technology-stack--rationale)
+3. [Key Features Implemented](#key-features-implemented)
+4. [State Management Architecture](#state-management-architecture)
+5. [Browser Persistence (localStorage)](#browser-persistence-localstorage)
+6. [Multi-Tab Navigation & Authentication](#multi-tab-navigation--authentication)
+7. [Dark & Light Theming Engine](#dark--light-theming-engine)
+8. [Design Fidelity & Responsive Breakpoints](#design-fidelity--responsive-breakpoints)
+9. [Screenshots](#screenshots)
+10. [Folder Structure](#folder-structure)
+11. [Installation & Local Setup Guide](#installation--local-setup-guide)
+12. [Automated Testing & Verification](#automated-testing--verification)
+13. [Accessibility Compliance (A11y)](#accessibility-compliance-a11y)
+14. [Final Candidate Submission Template](#final-candidate-submission-template)
+
+---
+
+## Project Overview & Objective
 
 The objective of this assignment is to develop **FocusBoard**, a single-user task management application built from scratch to demonstrate:
 - **React Fundamentals**: Component composition, pure rendering, and clean props drilling.
 - **State Flow & Data Integrity**: Single source of truth with immutable state updates.
 - **Full CRUD Operations**: Creating, viewing, editing, and deleting tasks with validation and destructive action safeguards.
 - **Search & Multi-Filter Coordination**: Case-insensitive keyword search cooperating with status tabs and priority filters.
-- **Figma Fidelity**: Pixel-perfect implementation of the 1440 × 1000 desktop frame, 390 × 1128 mobile frame, and 760 × 822 task form modal.
+- **Figma Fidelity**: Pixel-perfect implementation of the 1440 x 1000 desktop frame, 390 x 1128 mobile frame, and 760 x 822 task form modal.
 - **3-Slide Productivity Carousel**: Focus Notes carousel with previous/next circular buttons and indicator dots.
 - **Zero-Backend Persistence**: Safe `localStorage` synchronization preserving all modifications across page reloads.
 
 ---
 
-## 🛠️ Technology Stack & Rationale
+## Technology Stack & Rationale
 
 | Technology | Purpose | Selection Rationale |
 |---|---|---|
@@ -46,15 +46,15 @@ The objective of this assignment is to develop **FocusBoard**, a single-user tas
 | **localStorage API** | Persistence | Instant client-side persistence without external backend dependencies. |
 | **Puppeteer Core** | End-to-End QA | Automated headless browser verification suite validating 31 test scenarios. |
 
-> **Note on Scope**: As instructed, no complex global state libraries (Redux), backend APIs, cloud databases, or third-party CSS UI kits were introduced. Native React hooks and custom hooks provided optimal performance and maintainability within the 24-hour timeframe.
+> **Note on Scope**: As instructed in the assignment guidelines, no complex global state libraries (Redux), backend APIs, cloud databases, or third-party CSS UI kits were introduced. Native React hooks and custom hooks provide optimal performance and maintainability within the 24-hour timeframe.
 
 ---
 
-## ⚡ Key Features Implemented
+## Key Features Implemented
 
 ### 1. CRUD Operations (Create, Read, Update, Delete)
 - **Create Task**:
-  - Modal form (760 × 822) with validation.
+  - Modal form (760 x 822) with validation.
   - Real-time rejection of empty or whitespace-only titles with helpful inline error alerts.
   - Required fields: Title and Due Date. Optional/configurable: Description, Category, Status, Priority.
 - **Read & Render**:
@@ -78,8 +78,8 @@ The objective of this assignment is to develop **FocusBoard**, a single-user tas
 - **In-progress count**
 - **Completed count**
 - **Completion Percentage**:
-  $$\text{Completion \%} = \frac{\text{Completed Tasks}}{\text{Total Tasks}} \times 100$$
-- Statistics are computed dynamically via `useMemo`—zero hardcoded values.
+  - Calculated as: `(Completed Tasks / Total Tasks) * 100`
+- Statistics are computed dynamically via `useMemo` - zero hardcoded values.
 
 ### 4. Search & Multi-Filter Coordination
 - **Instant Search**: Case-insensitive filtering across task titles, descriptions, and categories.
@@ -90,7 +90,7 @@ The objective of this assignment is to develop **FocusBoard**, a single-user tas
 
 ---
 
-## 🧠 State Management Architecture
+## State Management Architecture
 
 State management is centralized in `App.jsx` following a unidirectional data flow:
 
@@ -125,7 +125,7 @@ State management is centralized in `App.jsx` following a unidirectional data flo
 
 ---
 
-## 💾 Browser Persistence (localStorage)
+## Browser Persistence (localStorage)
 
 Client persistence is abstracted into a custom hook: [`useLocalStorage.js`](src/hooks/useLocalStorage.js):
 
@@ -136,7 +136,7 @@ Client persistence is abstracted into a custom hook: [`useLocalStorage.js`](src/
 
 ---
 
-## 🗂️ Multi-Tab Navigation & Authentication
+## Multi-Tab Navigation & Authentication
 
 The navigation sidebar and mobile bar support full view switching:
 - **Overview**: The core Figma dashboard with hero, carousel, overview stats, and tasks preview.
@@ -154,40 +154,40 @@ The navigation sidebar and mobile bar support full view switching:
 
 ---
 
-## 🌓 Dark & Light Theming Engine
+## Dark & Light Theming Engine
 
 FocusBoard includes a complete, high-contrast dark theme:
-- **1-Click Header Toggle**: Sun ☀️ / Moon 🌙 icon button in the top navigation bar.
-- **Settings Card Toggle**: Light & Dark visual cards under Settings $\rightarrow$ Appearance.
+- **1-Click Header Toggle**: Sun / Moon icon button in the top navigation bar.
+- **Settings Card Toggle**: Light & Dark visual cards under Settings -> Appearance.
 - **CSS Architecture**: Clean `[data-theme="dark"]` stylesheet swapping custom properties for background, text, borders, shadows, and pill colors.
 - **Persistence**: Theme selection is stored in `focusboard_theme` and reloaded automatically.
 
 ---
 
-## 📐 Design Fidelity & Responsive Breakpoints
+## Design Fidelity & Responsive Breakpoints
 
 | Viewport | Target Resolution | Layout Behavior |
 |---|---|---|
-| **Desktop** | $1440 \times 1000$ | Full sidebar navigation, breadcrumbs, 3 overview cards, horizontal carousel banner, horizontal task rows with kebab menus. |
-| **Tablet** | $768\text{px}$ | Icon-only collapsible sidebar, reflowed 3-column stats grid, responsive cards without overflow. |
-| **Mobile** | $390 \times 1128$ | Hidden sidebar replaced with fixed bottom navigation bar, quick floating add button (`+`), stacked cards, touch-friendly tap targets. |
+| **Desktop** | 1440 x 1000 | Full sidebar navigation, breadcrumbs, 3 overview cards, horizontal carousel banner, horizontal task rows with kebab menus. |
+| **Tablet** | 768px | Icon-only collapsible sidebar, reflowed 3-column stats grid, responsive cards without overflow. |
+| **Mobile** | 390 x 1128 | Hidden sidebar replaced with fixed bottom navigation bar, quick floating add button (`+`), stacked cards, touch-friendly tap targets. |
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
-### 1. Desktop Dashboard – Light Theme ($1440 \times 1000$)
+### 1. Desktop Dashboard - Light Theme (1440 x 1000)
 ![Desktop Dashboard](screenshots/desktop-dashboard.png)
 
-### 2. Desktop Dashboard – Dark Theme ($1440 \times 1000$)
+### 2. Desktop Dashboard - Dark Theme (1440 x 1000)
 ![Desktop Dashboard Dark Mode](screenshots/desktop-dashboard-dark.png)
 
-### 3. Mobile Dashboard ($390 \times 844$)
+### 3. Mobile Dashboard (390 x 844)
 ![Mobile Dashboard](screenshots/mobile-dashboard.png)
 
 ---
 
-## 📂 Folder Structure
+## Folder Structure
 
 ```text
 focusboard/
@@ -231,7 +231,7 @@ focusboard/
 
 ---
 
-## 🚀 Installation & Local Setup Guide
+## Installation & Local Setup Guide
 
 ### Prerequisites
 - **Node.js**: v18.0.0 or higher
@@ -252,7 +252,7 @@ npm run dev
 ```
 
 Open your browser and navigate to:
-👉 **`http://localhost:3000/`**
+**`http://localhost:3000/`**
 
 ### Build for Production
 
@@ -266,7 +266,7 @@ npm run preview
 
 ---
 
-## 🧪 Automated Testing & Verification
+## Automated Testing & Verification
 
 An automated Puppeteer verification suite is included in [`scripts/run-qa-tests.js`](scripts/run-qa-tests.js).
 
@@ -278,11 +278,11 @@ node scripts/run-qa-tests.js
 ### Verified Test Summary:
 ```text
 =======================================
-📊 TEST SUITE SUMMARY: 31/31 PASSED (0 failed)
+TEST SUITE SUMMARY: 31/31 PASSED (0 failed)
 =======================================
 ```
 - Initial page load & hero title validation
-- Overview statistics calculation ($8$ total, $2$ in progress, $3$ completed)
+- Overview statistics calculation (8 total, 2 in progress, 3 completed)
 - Carousel 3-slide cyclic navigation (Next, Prev, Indicators)
 - Case-insensitive search filter & 1-click clear
 - Status tab filtering (`In progress`, `Completed`, `To-do`)
@@ -298,9 +298,9 @@ node scripts/run-qa-tests.js
 
 ---
 
-## ♿ Accessibility Compliance (A11y)
+## Accessibility Compliance (A11y)
 
-- **Semantic HTML**: Proper use of `<header>`, `<main>`, `<aside>`, `<nav>`, `<article>`, and `<dialog>` wrappers.
+- **Semantic HTML**: Proper use of `<header>`, `<main>`, `<aside>`, `<nav>`, `<article>`, and modal dialog wrappers.
 - **ARIA Standards**: Roles such as `role="tablist"`, `role="tab"`, `aria-selected`, `aria-current="page"`, and `aria-modal="true"`.
 - **Keyboard Navigation**:
   - `Escape` key automatically closes open modals.
@@ -310,16 +310,14 @@ node scripts/run-qa-tests.js
 
 ---
 
-## 📝 Final Candidate Submission Template
+## Final Candidate Submission Template
 
 ```text
 Candidate:           [Candidate Name]
 Framework:           React 18 + Vite (JavaScript)
-Hosting URL:         https://focusboard-task-management.vercel.app  (or Netlify link)
+Hosting URL:         https://focusboard-task-management.vercel.app
 GitHub Source:       https://github.com/[username]/focusboard
 Automated Tests:     31 / 31 Passed (Puppeteer E2E Test Suite)
 Notes / Pending Work: None. Full CRUD, 3-slide carousel, dynamic stats, localStorage,
                      themes (light/dark), calendar, settings, and auth are complete.
 ```
-#   t a s k - m a n a g e m e n t - d a s h b o a r d  
- 
