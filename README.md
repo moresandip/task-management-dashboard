@@ -100,6 +100,15 @@ focusboard/
 
 ---
 
+## 📸 Screenshots
+
+| Desktop Dashboard View (1440 × 1000) | Mobile View (390 × 844) |
+|:---:|:---:|
+| ![Desktop Dashboard](screenshots/desktop-dashboard.png) | ![Mobile Dashboard](screenshots/mobile-dashboard.png) |
+
+
+---
+
 ## 💻 Local Setup & Development
 
 ```bash
