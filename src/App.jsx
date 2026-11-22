@@ -10,6 +10,11 @@ import TaskFormModal from './components/TaskFormModal';
 import DeleteModal from './components/DeleteModal';
 import MobileNav from './components/MobileNav';
 
+import SettingsView from './components/SettingsView';
+import CalendarView from './components/CalendarView';
+import MyTasksView from './components/MyTasksView';
+import LoginModal from './components/LoginModal';
+
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { INITIAL_TASKS } from './data/sampleTasks';
 
@@ -17,14 +22,23 @@ import {
   ClipboardList, 
   Clock, 
   CheckCircle2, 
-  Plus, 
-  Sparkles,
-  TrendingUp
+  Plus 
 } from 'lucide-react';
 
+const DEFAULT_USER = {
+  name: 'Jane Doe',
+  email: 'jane.doe@focusboard.io',
+  role: 'Senior Product Designer',
+  initials: 'JD'
+};
+
 export default function App() {
-  // Navigation State
+  // Navigation State: 'overview' | 'tasks' | 'calendar' | 'settings'
   const [activeNavTab, setActiveNavTab] = useState('overview');
+
+  // User Auth State persisted in localStorage
+  const [user, setUser] = useLocalStorage('focusboard_user', DEFAULT_USER);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Core Tasks State persisted in localStorage with key 'focusboard_tasks'
   const [tasks, setTasks] = useLocalStorage('focusboard_tasks', INITIAL_TASKS);
@@ -42,7 +56,7 @@ export default function App() {
   const [taskToDelete, setTaskToDelete] = useState(null);
 
   // =========================================================================
-  // Derived Statistics (never hardcoded, dynamically calculated)
+  // Derived Statistics (dynamically calculated)
   // =========================================================================
   const stats = useMemo(() => {
     const total = tasks.length;
@@ -61,11 +75,10 @@ export default function App() {
   }, [tasks]);
 
   // =========================================================================
-  // Filtered Tasks (combines search + status tab + priority filter)
+  // Filtered Tasks
   // =========================================================================
   const filteredTasks = useMemo(() => {
     return tasks.filter((task) => {
-      // 1. Search Query filter (case-insensitive on title and description)
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const matchesTitle = task.title.toLowerCase().includes(query);
@@ -76,14 +89,12 @@ export default function App() {
         }
       }
 
-      // 2. Status Tab filter
       if (statusFilter !== 'all') {
         if (task.status !== statusFilter) {
           return false;
         }
       }
 
-      // 3. Priority filter
       if (priorityFilter !== 'all') {
         if (task.priority !== priorityFilter) {
           return false;
@@ -117,12 +128,10 @@ export default function App() {
 
   const handleSaveTask = (taskData) => {
     if (editingTask) {
-      // Edit mode: update task while preserving ID
       setTasks((prev) =>
         prev.map((t) => (t.id === taskData.id ? { ...t, ...taskData } : t))
       );
     } else {
-      // Create mode: prepend new task
       setTasks((prev) => [taskData, ...prev]);
     }
   };
@@ -152,136 +161,235 @@ export default function App() {
     }
   };
 
+  // =========================================================================
+  // Auth Handlers (Login / Logout)
+  // =========================================================================
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
+
+  // =========================================================================
+  // Data Management Handlers
+  // =========================================================================
+  const handleResetTasks = () => {
+    setTasks(INITIAL_TASKS);
+    alert('Tasks have been reset to the default 8 sample tasks!');
+  };
+
+  const handleClearTasks = () => {
+    if (window.confirm('Are you sure you want to clear all tasks from browser storage?')) {
+      setTasks([]);
+    }
+  };
+
+  const handleExportTasks = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `focusboard_tasks_${new Date().toISOString().slice(0, 10)}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  };
+
+  const getHeaderTitle = () => {
+    switch (activeNavTab) {
+      case 'tasks':
+        return 'My tasks';
+      case 'calendar':
+        return 'Calendar';
+      case 'settings':
+        return 'Settings';
+      default:
+        return 'Overview';
+    }
+  };
+
   return (
     <div className="app-layout">
-      {/* Sidebar Navigation (Desktop & Tablet) */}
-      <Sidebar activeTab={activeNavTab} onSelectTab={setActiveNavTab} />
+      {/* Sidebar Navigation */}
+      <Sidebar 
+        activeTab={activeNavTab} 
+        onSelectTab={setActiveNavTab} 
+        user={user}
+        onLogout={handleLogout}
+        onOpenLogin={() => setIsLoginModalOpen(true)}
+      />
 
       {/* Main Content Area */}
       <div className="main-container">
         {/* Header */}
         <Header 
-          title={activeNavTab === 'overview' ? 'Overview' : activeNavTab === 'tasks' ? 'My tasks' : activeNavTab === 'calendar' ? 'Calendar' : 'Settings'} 
-          onOpenNewTask={handleOpenCreateModal} 
+          title={getHeaderTitle()} 
+          user={user}
+          onOpenLogin={() => setIsLoginModalOpen(true)}
+          onLogout={handleLogout}
+          onNavigateTab={setActiveNavTab}
         />
 
-        {/* Dashboard Content */}
+        {/* Dynamic View Rendering based on activeNavTab */}
         <main className="dashboard-content" role="main">
-          {/* Welcome Heading & New Task Action */}
-          <div className="dashboard-hero">
-            <div>
-              <h1 className="hero-title">Your work, in focus.</h1>
-              <p className="hero-subtitle">
-                Plan your day, stay organized, and celebrate small wins.
-              </p>
-            </div>
-            
-            <button
-              type="button"
-              className="primary-btn desktop-new-task-btn"
-              onClick={handleOpenCreateModal}
-              aria-label="Create new task"
-            >
-              <Plus size={16} />
-              <span>New task</span>
-            </button>
+          {activeNavTab === 'overview' && (
+            <>
+              {/* Welcome Heading & New Task Action */}
+              <div className="dashboard-hero">
+                <div>
+                  <h1 className="hero-title">Your work, in focus.</h1>
+                  <p className="hero-subtitle">
+                    Plan your day, stay organized, and celebrate small wins.
+                  </p>
+                </div>
+                
+                <button
+                  type="button"
+                  className="primary-btn desktop-new-task-btn"
+                  onClick={handleOpenCreateModal}
+                  aria-label="Create new task"
+                >
+                  <Plus size={16} />
+                  <span>New task</span>
+                </button>
 
-            {/* Mobile quick add button */}
-            <button
-              type="button"
-              className="mobile-fab-btn"
-              onClick={handleOpenCreateModal}
-              aria-label="Create new task"
-            >
-              <Plus size={20} />
-            </button>
-          </div>
-
-          {/* Focus Notes 3-Slide Carousel */}
-          <FocusNotes activeTasksCount={stats.inProgress} />
-
-          {/* Overview Statistics Cards */}
-          <section className="overview-stats-grid" aria-label="Dashboard Overview Statistics">
-            <StatCard
-              title="Total tasks"
-              value={stats.total}
-              subtitle="Across all projects"
-              icon={ClipboardList}
-              iconBgColor="#EEF2FF"
-              iconColor="#4F46E5"
-            />
-            <StatCard
-              title="In progress"
-              value={stats.inProgress}
-              subtitle="Keep the momentum"
-              icon={Clock}
-              iconBgColor="#EFF6FF"
-              iconColor="#3B82F6"
-            />
-            <StatCard
-              title="Completed"
-              value={stats.completed}
-              subtitle={`${stats.completionPercent}% finished this week`}
-              icon={CheckCircle2}
-              iconBgColor="#ECFDF5"
-              iconColor="#10B981"
-            />
-          </section>
-
-          {/* My Tasks Section */}
-          <section className="my-tasks-section" aria-label="My tasks list and filters">
-            <div className="tasks-section-header">
-              <div>
-                <h2 className="tasks-section-title">My tasks</h2>
-                <p className="tasks-section-subtitle">
-                  Manage and track everything in one place.
-                </p>
+                <button
+                  type="button"
+                  className="mobile-fab-btn"
+                  onClick={handleOpenCreateModal}
+                  aria-label="Create new task"
+                >
+                  <Plus size={20} />
+                </button>
               </div>
-              <button 
-                type="button" 
-                className="view-all-link"
-                onClick={handleResetFilters}
-              >
-                View all tasks
-              </button>
-            </div>
 
-            {/* Filter and Search Bar */}
-            <div className="tasks-filter-bar">
-              <SearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                placeholder="Find a task..."
-              />
+              {/* Focus Notes 3-Slide Carousel */}
+              <FocusNotes activeTasksCount={stats.inProgress} />
 
-              <FilterTabs
-                activeStatus={statusFilter}
-                onSelectStatus={setStatusFilter}
-                selectedPriority={priorityFilter}
-                onSelectPriority={setPriorityFilter}
-                statusCounts={{
-                  all: stats.total,
-                  inProgress: stats.inProgress,
-                  completed: stats.completed,
-                  todo: stats.todo
-                }}
-                isFiltered={isFiltered}
-                onResetFilters={handleResetFilters}
-              />
-            </div>
+              {/* Overview Statistics Cards */}
+              <section className="overview-stats-grid" aria-label="Dashboard Overview Statistics">
+                <StatCard
+                  title="Total tasks"
+                  value={stats.total}
+                  subtitle="Across all projects"
+                  icon={ClipboardList}
+                  iconBgColor="#EEF2FF"
+                  iconColor="#4F46E5"
+                />
+                <StatCard
+                  title="In progress"
+                  value={stats.inProgress}
+                  subtitle="Keep the momentum"
+                  icon={Clock}
+                  iconBgColor="#EFF6FF"
+                  iconColor="#3B82F6"
+                />
+                <StatCard
+                  title="Completed"
+                  value={stats.completed}
+                  subtitle={`${stats.completionPercent}% finished this week`}
+                  icon={CheckCircle2}
+                  iconBgColor="#ECFDF5"
+                  iconColor="#10B981"
+                />
+              </section>
 
-            {/* Task List Component */}
-            <TaskList
-              tasks={filteredTasks}
-              onEdit={handleOpenEditModal}
-              onDelete={handleOpenDeleteModal}
+              {/* Tasks Section Preview */}
+              <section className="my-tasks-section" aria-label="My tasks list and filters">
+                <div className="tasks-section-header">
+                  <div>
+                    <h2 className="tasks-section-title">My tasks</h2>
+                    <p className="tasks-section-subtitle">
+                      Manage and track everything in one place.
+                    </p>
+                  </div>
+                  <button 
+                    type="button" 
+                    className="view-all-link"
+                    onClick={() => setActiveNavTab('tasks')}
+                  >
+                    View all tasks
+                  </button>
+                </div>
+
+                {/* Filter and Search Bar */}
+                <div className="tasks-filter-bar">
+                  <SearchBar
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    placeholder="Find a task..."
+                  />
+
+                  <FilterTabs
+                    activeStatus={statusFilter}
+                    onSelectStatus={setStatusFilter}
+                    selectedPriority={priorityFilter}
+                    onSelectPriority={setPriorityFilter}
+                    statusCounts={{
+                      all: stats.total,
+                      inProgress: stats.inProgress,
+                      completed: stats.completed,
+                      todo: stats.todo
+                    }}
+                    isFiltered={isFiltered}
+                    onResetFilters={handleResetFilters}
+                  />
+                </div>
+
+                {/* Task List Component */}
+                <TaskList
+                  tasks={filteredTasks}
+                  onEdit={handleOpenEditModal}
+                  onDelete={handleOpenDeleteModal}
+                  onStatusChange={handleStatusChange}
+                  onOpenNewTask={handleOpenCreateModal}
+                  searchQuery={searchQuery}
+                  hasActiveFilters={isFiltered}
+                  onResetFilters={handleResetFilters}
+                />
+              </section>
+            </>
+          )}
+
+          {activeNavTab === 'tasks' && (
+            <MyTasksView
+              tasks={tasks}
+              filteredTasks={filteredTasks}
+              stats={stats}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              statusFilter={statusFilter}
+              onStatusFilterChange={setStatusFilter}
+              priorityFilter={priorityFilter}
+              onPriorityFilterChange={setPriorityFilter}
+              isFiltered={isFiltered}
+              onResetFilters={handleResetFilters}
+              onEditTask={handleOpenEditModal}
+              onDeleteTask={handleOpenDeleteModal}
               onStatusChange={handleStatusChange}
               onOpenNewTask={handleOpenCreateModal}
-              searchQuery={searchQuery}
-              hasActiveFilters={isFiltered}
-              onResetFilters={handleResetFilters}
             />
-          </section>
+          )}
+
+          {activeNavTab === 'calendar' && (
+            <CalendarView 
+              tasks={tasks} 
+              onEditTask={handleOpenEditModal}
+              onOpenNewTask={handleOpenCreateModal}
+            />
+          )}
+
+          {activeNavTab === 'settings' && (
+            <SettingsView
+              user={user}
+              onUpdateUser={setUser}
+              onLogout={handleLogout}
+              onResetTasks={handleResetTasks}
+              onClearTasks={handleClearTasks}
+              onExportTasks={handleExportTasks}
+            />
+          )}
         </main>
       </div>
 
@@ -302,6 +410,13 @@ export default function App() {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
         taskTitle={taskToDelete?.title || ''}
+      />
+
+      {/* Authentication / Login Modal */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onLogin={handleLogin}
       />
     </div>
   );

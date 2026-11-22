@@ -195,6 +195,57 @@ async function runTests() {
     const countAfterReload = await page.$$eval('.task-row-card', els => els.length);
     assert('LocalStorage State Restored on Reload', countAfterReload >= 8, `Tasks present: ${countAfterReload}`);
 
+    // 13. Test Workspace & Settings Tab Navigation
+    await page.setViewport({ width: 1440, height: 1000 });
+    await new Promise(r => setTimeout(r, 200));
+
+    // Switch to Settings tab
+    const navButtons = await page.$$('.sidebar-nav-item');
+    // Index 3 is Settings
+    await navButtons[3].click();
+    await page.waitForSelector('.settings-main-title', { visible: true, timeout: 2000 });
+    const settingsTitle = await page.$eval('.settings-main-title', el => el.textContent.trim());
+    assert('Settings Tab Opens Correctly', settingsTitle.includes('Settings'), settingsTitle);
+
+    // Switch to Calendar tab (Index 2)
+    await (await page.$$('.sidebar-nav-item'))[2].click();
+    await page.waitForSelector('.calendar-view-container', { visible: true, timeout: 2000 });
+    assert('Calendar Tab Opens Correctly', true, 'Calendar & Deadlines view rendered');
+
+    // Switch to My tasks tab (Index 1)
+    await (await page.$$('.sidebar-nav-item'))[1].click();
+    await page.waitForSelector('.my-tasks-page', { visible: true, timeout: 2000 });
+    assert('My Tasks Tab Opens Correctly', true, 'My Tasks Workspace view rendered');
+
+    // Return to Overview (Index 0)
+    await (await page.$$('.sidebar-nav-item'))[0].click();
+    await page.waitForSelector('.dashboard-hero', { visible: true, timeout: 2000 });
+    assert('Overview Tab Restored Correctly', true);
+
+    // 14. Test Logout & Login Flow
+    // Click User Profile in Header to open dropdown
+    await page.click('.user-profile-btn');
+    await page.waitForSelector('.logout-item', { visible: true, timeout: 2000 });
+    await page.click('.logout-item');
+    await new Promise(r => setTimeout(r, 300));
+
+    // Confirm Logged Out state shows Sign In button
+    const signInBtnVisible = await page.$('.header-signin-btn') !== null;
+    assert('User Logout Successful', signInBtnVisible);
+
+    // Click Sign In button to open Login Modal
+    await page.click('.header-signin-btn');
+    await page.waitForSelector('.login-modal', { visible: true, timeout: 2000 });
+    assert('Login Modal Opened', true);
+
+    // Click Demo Login button
+    await page.click('.demo-signin-btn');
+    await page.waitForFunction(() => !document.querySelector('.login-modal'));
+    await new Promise(r => setTimeout(r, 300));
+
+    const loggedInUserInitials = await page.$eval('.avatar-circle span', el => el.textContent.trim());
+    assert('User Login Successful (Restored Profile)', loggedInUserInitials === 'JD', `Initials: ${loggedInUserInitials}`);
+
   } catch (err) {
     console.error('Test execution error:', err);
     assert('Execution without Unhandled Exception', false, err.message);
