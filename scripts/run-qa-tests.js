@@ -246,6 +246,23 @@ async function runTests() {
     const loggedInUserInitials = await page.$eval('.avatar-circle span', el => el.textContent.trim());
     assert('User Login Successful (Restored Profile)', loggedInUserInitials === 'JD', `Initials: ${loggedInUserInitials}`);
 
+    // 15. Test Theme Toggle (Light / Dark Mode Engine)
+    await page.click('.theme-toggle-header-btn');
+    await new Promise(r => setTimeout(r, 200));
+    let themeAttr = await page.$eval('html', el => el.getAttribute('data-theme'));
+    assert('Theme Toggled to Dark Mode', themeAttr === 'dark', `Current theme: ${themeAttr}`);
+
+    // Take dark mode screenshot
+    const darkScreenshotPath = path.join(screenshotsDir, 'desktop-dashboard-dark.png');
+    await page.screenshot({ path: darkScreenshotPath, fullPage: false });
+    assert('Dark Mode Screenshot Generated', fs.existsSync(darkScreenshotPath), darkScreenshotPath);
+
+    // Toggle back to Light Mode
+    await page.click('.theme-toggle-header-btn');
+    await new Promise(r => setTimeout(r, 200));
+    themeAttr = await page.$eval('html', el => el.getAttribute('data-theme'));
+    assert('Theme Toggled back to Light Mode', themeAttr === 'light', `Current theme: ${themeAttr}`);
+
   } catch (err) {
     console.error('Test execution error:', err);
     assert('Execution without Unhandled Exception', false, err.message);

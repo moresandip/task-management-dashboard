@@ -36,6 +36,18 @@ export default function App() {
   // Navigation State: 'overview' | 'tasks' | 'calendar' | 'settings'
   const [activeNavTab, setActiveNavTab] = useState('overview');
 
+  // Theme State: 'light' | 'dark' persisted in localStorage
+  const [theme, setTheme] = useLocalStorage('focusboard_theme', 'light');
+
+  // Synchronize HTML data-theme attribute with state
+  React.useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
   // User Auth State persisted in localStorage
   const [user, setUser] = useLocalStorage('focusboard_user', DEFAULT_USER);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -226,6 +238,8 @@ export default function App() {
         <Header 
           title={getHeaderTitle()} 
           user={user}
+          theme={theme}
+          onToggleTheme={handleToggleTheme}
           onOpenLogin={() => setIsLoginModalOpen(true)}
           onLogout={handleLogout}
           onNavigateTab={setActiveNavTab}
@@ -384,6 +398,8 @@ export default function App() {
             <SettingsView
               user={user}
               onUpdateUser={setUser}
+              theme={theme}
+              onSelectTheme={setTheme}
               onLogout={handleLogout}
               onResetTasks={handleResetTasks}
               onClearTasks={handleClearTasks}

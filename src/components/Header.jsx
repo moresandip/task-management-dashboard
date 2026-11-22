@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { LogIn, LogOut, Settings as SettingsIcon, CheckSquare, User, ChevronDown } from 'lucide-react';
+import { LogIn, LogOut, Settings as SettingsIcon, CheckSquare, User, ChevronDown, Sun, Moon } from 'lucide-react';
 
 export default function Header({ 
   title = "Overview", 
   user, 
+  theme = "light",
+  onToggleTheme,
   onOpenLogin, 
   onLogout, 
   onNavigateTab 
@@ -36,6 +38,17 @@ export default function Header({
       </div>
 
       <div className="header-right">
+        {/* Quick Theme Toggle Button */}
+        <button
+          type="button"
+          className="theme-toggle-header-btn"
+          onClick={onToggleTheme}
+          title={theme === 'dark' ? "Switch to Light Theme" : "Switch to Dark Theme"}
+          aria-label={theme === 'dark' ? "Switch to Light Theme" : "Switch to Dark Theme"}
+        >
+          {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
+
         {user ? (
           <div className="user-profile-wrapper" ref={profileRef}>
             <button

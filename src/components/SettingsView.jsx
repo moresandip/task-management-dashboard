@@ -19,6 +19,8 @@ import {
 export default function SettingsView({ 
   user, 
   onUpdateUser, 
+  theme = 'light',
+  onSelectTheme,
   onLogout, 
   onResetTasks, 
   onExportTasks,
@@ -33,7 +35,6 @@ export default function SettingsView({
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Preferences state
-  const [theme, setTheme] = useState('light');
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [taskReminders, setTaskReminders] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
@@ -208,7 +209,7 @@ export default function SettingsView({
               <div className="preferences-grid">
                 <div 
                   className={`theme-option-card ${theme === 'light' ? 'selected' : ''}`}
-                  onClick={() => setTheme('light')}
+                  onClick={() => onSelectTheme && onSelectTheme('light')}
                 >
                   <div className="theme-card-icon light-icon">
                     <Sun size={24} />
@@ -219,7 +220,7 @@ export default function SettingsView({
 
                 <div 
                   className={`theme-option-card ${theme === 'dark' ? 'selected' : ''}`}
-                  onClick={() => setTheme('dark')}
+                  onClick={() => onSelectTheme && onSelectTheme('dark')}
                 >
                   <div className="theme-card-icon dark-icon">
                     <Moon size={24} />
