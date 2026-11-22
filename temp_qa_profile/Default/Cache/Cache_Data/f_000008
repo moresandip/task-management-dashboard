@@ -1,0 +1,519 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/TaskFormModal.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=99e9b98b"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("D:/task management dashboard/src/components/TaskFormModal.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=99e9b98b"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react; const useState = __vite__cjsImport3_react["useState"]; const useEffect = __vite__cjsImport3_react["useEffect"]; const useRef = __vite__cjsImport3_react["useRef"];
+import { X, Calendar as CalendarIcon, AlertCircle } from "/node_modules/.vite/deps/lucide-react.js?v=99e9b98b";
+import { CATEGORIES, PRIORITIES, STATUSES } from "/src/data/sampleTasks.js";
+export default function TaskFormModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  editingTask = null
+}) {
+  _s();
+  const isEditing = Boolean(editingTask);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("Design");
+  const [status, setStatus] = useState("To do");
+  const [priority, setPriority] = useState("Medium");
+  const [dueDate, setDueDate] = useState("");
+  const [errors, setErrors] = useState({});
+  const titleInputRef = useRef(null);
+  const getTodayDate = () => {
+    const today = /* @__PURE__ */ new Date();
+    return today.toISOString().split("T")[0];
+  };
+  useEffect(() => {
+    if (isOpen) {
+      if (editingTask) {
+        setTitle(editingTask.title || "");
+        setDescription(editingTask.description || "");
+        setCategory(editingTask.category || "Design");
+        setStatus(editingTask.status || "To do");
+        setPriority(editingTask.priority || "Medium");
+        setDueDate(editingTask.dueDate || getTodayDate());
+      } else {
+        setTitle("");
+        setDescription("");
+        setCategory("Design");
+        setStatus("To do");
+        setPriority("Medium");
+        setDueDate(getTodayDate());
+      }
+      setErrors({});
+      setTimeout(() => {
+        titleInputRef.current?.focus();
+      }, 100);
+    }
+  }, [isOpen, editingTask]);
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+  if (!isOpen) return null;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = {};
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle) {
+      validationErrors.title = "Task title is required and cannot be empty.";
+    }
+    if (!dueDate) {
+      validationErrors.dueDate = "Due date is required.";
+    }
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    const taskData = {
+      title: trimmedTitle,
+      description: description.trim(),
+      category,
+      status,
+      priority,
+      dueDate
+    };
+    if (isEditing) {
+      onSubmit({
+        ...editingTask,
+        ...taskData
+      });
+    } else {
+      onSubmit({
+        id: `task-${Date.now()}`,
+        ...taskData,
+        progress: status === "Completed" ? 100 : status === "In progress" ? 50 : 0
+      });
+    }
+    onClose();
+  };
+  return /* @__PURE__ */ jsxDEV("div", { className: "modal-backdrop", onClick: onClose, role: "presentation", children: /* @__PURE__ */ jsxDEV(
+    "div",
+    {
+      className: "modal-container task-form-modal",
+      onClick: (e) => e.stopPropagation(),
+      role: "dialog",
+      "aria-modal": "true",
+      "aria-labelledby": "modal-form-title",
+      children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "modal-header", children: [
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV("h2", { id: "modal-form-title", className: "modal-title", children: isEditing ? "Edit task" : "Create new task" }, void 0, false, {
+              fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+              lineNumber: 144,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("p", { className: "modal-subtitle", children: isEditing ? "Update your task details and maintain progress." : "Add your task details to stay on top of your work." }, void 0, false, {
+              fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+              lineNumber: 147,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+            lineNumber: 143,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV(
+            "button",
+            {
+              type: "button",
+              className: "modal-close-btn",
+              onClick: onClose,
+              "aria-label": "Close dialog",
+              children: /* @__PURE__ */ jsxDEV(X, { size: 20 }, void 0, false, {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 159,
+                columnNumber: 13
+              }, this)
+            },
+            void 0,
+            false,
+            {
+              fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+              lineNumber: 153,
+              columnNumber: 11
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+          lineNumber: 142,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV("form", { onSubmit: handleSubmit, className: "task-form", noValidate: true, children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "form-group", children: [
+            /* @__PURE__ */ jsxDEV("label", { htmlFor: "task-title-input", className: "form-label", children: [
+              "Task title ",
+              /* @__PURE__ */ jsxDEV("span", { className: "required-star", children: "*" }, void 0, false, {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 168,
+                columnNumber: 26
+              }, this)
+            ] }, void 0, true, {
+              fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+              lineNumber: 167,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV(
+              "input",
+              {
+                ref: titleInputRef,
+                id: "task-title-input",
+                type: "text",
+                className: `form-input ${errors.title ? "input-error" : ""}`,
+                placeholder: "e.g. Update pricing page",
+                value: title,
+                onChange: (e) => {
+                  setTitle(e.target.value);
+                  if (errors.title) setErrors((prev) => ({ ...prev, title: null }));
+                },
+                required: true,
+                "aria-invalid": errors.title ? "true" : "false",
+                "aria-describedby": errors.title ? "title-error" : void 0
+              },
+              void 0,
+              false,
+              {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 170,
+                columnNumber: 13
+              },
+              this
+            ),
+            errors.title && /* @__PURE__ */ jsxDEV("p", { id: "title-error", className: "error-message", children: [
+              /* @__PURE__ */ jsxDEV(AlertCircle, { size: 14 }, void 0, false, {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 187,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { children: errors.title }, void 0, false, {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 188,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+              lineNumber: 186,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+            lineNumber: 166,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "form-group", children: [
+            /* @__PURE__ */ jsxDEV("label", { htmlFor: "task-desc-input", className: "form-label", children: "Description" }, void 0, false, {
+              fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+              lineNumber: 195,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV(
+              "textarea",
+              {
+                id: "task-desc-input",
+                className: "form-textarea",
+                rows: 4,
+                placeholder: "Add notes about this task...",
+                value: description,
+                onChange: (e) => setDescription(e.target.value)
+              },
+              void 0,
+              false,
+              {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 198,
+                columnNumber: 13
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+            lineNumber: 194,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "form-row-2col", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "form-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { htmlFor: "task-status-select", className: "form-label", children: "Status" }, void 0, false, {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 211,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "select",
+                {
+                  id: "task-status-select",
+                  className: "form-select",
+                  value: status,
+                  onChange: (e) => setStatus(e.target.value),
+                  children: STATUSES.map(
+                    (st) => /* @__PURE__ */ jsxDEV("option", { value: st, children: st }, st, false, {
+                      fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                      lineNumber: 221,
+                      columnNumber: 17
+                    }, this)
+                  )
+                },
+                void 0,
+                false,
+                {
+                  fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                  lineNumber: 214,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+              lineNumber: 210,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "form-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { htmlFor: "task-priority-select", className: "form-label", children: "Priority" }, void 0, false, {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 229,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "select",
+                {
+                  id: "task-priority-select",
+                  className: "form-select",
+                  value: priority,
+                  onChange: (e) => setPriority(e.target.value),
+                  children: PRIORITIES.map(
+                    (p) => /* @__PURE__ */ jsxDEV("option", { value: p, children: p }, p, false, {
+                      fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                      lineNumber: 239,
+                      columnNumber: 17
+                    }, this)
+                  )
+                },
+                void 0,
+                false,
+                {
+                  fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                  lineNumber: 232,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+              lineNumber: 228,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+            lineNumber: 209,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "form-row-2col", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "form-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { htmlFor: "task-category-select", className: "form-label", children: "Category" }, void 0, false, {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 250,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "select",
+                {
+                  id: "task-category-select",
+                  className: "form-select",
+                  value: category,
+                  onChange: (e) => setCategory(e.target.value),
+                  children: CATEGORIES.map(
+                    (cat) => /* @__PURE__ */ jsxDEV("option", { value: cat, children: cat }, cat, false, {
+                      fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                      lineNumber: 260,
+                      columnNumber: 17
+                    }, this)
+                  )
+                },
+                void 0,
+                false,
+                {
+                  fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                  lineNumber: 253,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+              lineNumber: 249,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "form-group", children: [
+              /* @__PURE__ */ jsxDEV("label", { htmlFor: "task-due-date-input", className: "form-label", children: [
+                "Due date ",
+                /* @__PURE__ */ jsxDEV("span", { className: "required-star", children: "*" }, void 0, false, {
+                  fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                  lineNumber: 269,
+                  columnNumber: 26
+                }, this)
+              ] }, void 0, true, {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 268,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  id: "task-due-date-input",
+                  type: "date",
+                  className: `form-input ${errors.dueDate ? "input-error" : ""}`,
+                  value: dueDate,
+                  onChange: (e) => {
+                    setDueDate(e.target.value);
+                    if (errors.dueDate) setErrors((prev) => ({ ...prev, dueDate: null }));
+                  },
+                  required: true,
+                  "aria-invalid": errors.dueDate ? "true" : "false"
+                },
+                void 0,
+                false,
+                {
+                  fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                  lineNumber: 271,
+                  columnNumber: 15
+                },
+                this
+              ),
+              errors.dueDate && /* @__PURE__ */ jsxDEV("p", { className: "error-message", children: [
+                /* @__PURE__ */ jsxDEV(AlertCircle, { size: 14 }, void 0, false, {
+                  fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                  lineNumber: 285,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV("span", { children: errors.dueDate }, void 0, false, {
+                  fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                  lineNumber: 286,
+                  columnNumber: 19
+                }, this)
+              ] }, void 0, true, {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 284,
+                columnNumber: 15
+              }, this)
+            ] }, void 0, true, {
+              fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+              lineNumber: 267,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+            lineNumber: 248,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "form-note", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "required-star", children: "*" }, void 0, false, {
+              fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+              lineNumber: 293,
+              columnNumber: 13
+            }, this),
+            " Required field."
+          ] }, void 0, true, {
+            fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+            lineNumber: 292,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "modal-footer", children: [
+            /* @__PURE__ */ jsxDEV(
+              "button",
+              {
+                type: "button",
+                className: "modal-cancel-btn",
+                onClick: onClose,
+                children: "Cancel"
+              },
+              void 0,
+              false,
+              {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 298,
+                columnNumber: 13
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV(
+              "button",
+              {
+                type: "submit",
+                className: "modal-submit-btn",
+                children: isEditing ? "Save changes" : "Create task"
+              },
+              void 0,
+              false,
+              {
+                fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+                lineNumber: 305,
+                columnNumber: 13
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+            lineNumber: 297,
+            columnNumber: 11
+          }, this)
+        ] }, void 0, true, {
+          fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+          lineNumber: 164,
+          columnNumber: 9
+        }, this)
+      ]
+    },
+    void 0,
+    true,
+    {
+      fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+      lineNumber: 134,
+      columnNumber: 7
+    },
+    this
+  ) }, void 0, false, {
+    fileName: "D:/task management dashboard/src/components/TaskFormModal.jsx",
+    lineNumber: 133,
+    columnNumber: 5
+  }, this);
+}
+_s(TaskFormModal, "MmCN9Y9E32I5IZzCMoi+ePn3YrM=");
+_c = TaskFormModal;
+var _c;
+$RefreshReg$(_c, "TaskFormModal");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("D:/task management dashboard/src/components/TaskFormModal.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("D:/task management dashboard/src/components/TaskFormModal.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QXNCO0FBQUEsbUJBRnhCO0FBQUE7QUFBQTtBQUFBO0FBQUEscUJBR0E7QUFBQSxpQkFwQko7QUFBQTtBQUFBO0FBQUE7QUFBQSxtQkFzQkE7QUFBQSxlQXpDRjtBQUFBO0FBQUE7QUFBQTtBQUFBLGlCQTBDQTtBQUFBLFVBRUEsdUJBQUMsU0FBSSxXQUFVLGFBQ2I7QUFBQSxtQ0FBQyxVQUFLLFdBQVUsaUJBQWdCLGlCQUFoQztBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQUFpQztBQUFBLFlBQU87QUFBQSxlQUQxQztBQUFBO0FBQUE7QUFBQTtBQUFBLGlCQUVBO0FBQUEsVUFHQSx1QkFBQyxTQUFJLFdBQVUsZ0JBQ2I7QUFBQTtBQUFBLGNBQUM7QUFBQTtBQUFBLGdCQUNDLE1BQUs7QUFBQSxnQkFDTCxXQUFVO0FBQUEsZ0JBQ1YsU0FBU2hCO0FBQUFBLGdCQUFRO0FBQUE7QUFBQSxjQUhuQjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsWUFNQTtBQUFBLFlBQ0E7QUFBQSxjQUFDO0FBQUE7QUFBQSxnQkFDQyxNQUFLO0FBQUEsZ0JBQ0wsV0FBVTtBQUFBLGdCQUVUSSxzQkFBWSxpQkFBaUI7QUFBQTtBQUFBLGNBSmhDO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxZQUtBO0FBQUEsZUFiRjtBQUFBO0FBQUE7QUFBQTtBQUFBLGlCQWNBO0FBQUEsYUFuSkY7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQW9KQTtBQUFBO0FBQUE7QUFBQSxJQWxMRjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsRUFtTEEsS0FwTEY7QUFBQTtBQUFBO0FBQUE7QUFBQSxTQXFMQTtBQUVKO0FBQUNELEdBcFN1QkwsZUFBYTtBQUFBLEtBQWJBO0FBQWEsSUFBQTBEO0FBQUEsYUFBQUEsSUFBQSIsIm5hbWVzIjpbIlJlYWN0IiwidXNlU3RhdGUiLCJ1c2VFZmZlY3QiLCJ1c2VSZWYiLCJYIiwiQ2FsZW5kYXIiLCJDYWxlbmRhckljb24iLCJBbGVydENpcmNsZSIsIkNBVEVHT1JJRVMiLCJQUklPUklUSUVTIiwiU1RBVFVTRVMiLCJUYXNrRm9ybU1vZGFsIiwiaXNPcGVuIiwib25DbG9zZSIsIm9uU3VibWl0IiwiZWRpdGluZ1Rhc2siLCJfcyIsImlzRWRpdGluZyIsIkJvb2xlYW4iLCJ0aXRsZSIsInNldFRpdGxlIiwiZGVzY3JpcHRpb24iLCJzZXREZXNjcmlwdGlvbiIsImNhdGVnb3J5Iiwic2V0Q2F0ZWdvcnkiLCJzdGF0dXMiLCJzZXRTdGF0dXMiLCJwcmlvcml0eSIsInNldFByaW9yaXR5IiwiZHVlRGF0ZSIsInNldER1ZURhdGUiLCJlcnJvcnMiLCJzZXRFcnJvcnMiLCJ0aXRsZUlucHV0UmVmIiwiZ2V0VG9kYXlEYXRlIiwidG9kYXkiLCJEYXRlIiwidG9JU09TdHJpbmciLCJzcGxpdCIsInNldFRpbWVvdXQiLCJjdXJyZW50IiwiZm9jdXMiLCJoYW5kbGVLZXlEb3duIiwiZSIsImtleSIsIndpbmRvdyIsImFkZEV2ZW50TGlzdGVuZXIiLCJyZW1vdmVFdmVudExpc3RlbmVyIiwiaGFuZGxlU3VibWl0IiwicHJldmVudERlZmF1bHQiLCJ2YWxpZGF0aW9uRXJyb3JzIiwidHJpbW1lZFRpdGxlIiwidHJpbSIsIk9iamVjdCIsImtleXMiLCJsZW5ndGgiLCJ0YXNrRGF0YSIsImlkIiwibm93IiwicHJvZ3Jlc3MiLCJzdG9wUHJvcGFnYXRpb24iLCJ0YXJnZXQiLCJ2YWx1ZSIsInByZXYiLCJ1bmRlZmluZWQiLCJtYXAiLCJzdCIsInAiLCJjYXQiLCJfYyJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJUYXNrRm9ybU1vZGFsLmpzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QsIHsgdXNlU3RhdGUsIHVzZUVmZmVjdCwgdXNlUmVmIH0gZnJvbSAncmVhY3QnO1xuaW1wb3J0IHsgWCwgQ2FsZW5kYXIgYXMgQ2FsZW5kYXJJY29uLCBBbGVydENpcmNsZSB9IGZyb20gJ2x1Y2lkZS1yZWFjdCc7XG5pbXBvcnQgeyBDQVRFR09SSUVTLCBQUklPUklUSUVTLCBTVEFUVVNFUyB9IGZyb20gJy4uL2RhdGEvc2FtcGxlVGFza3MnO1xuXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBUYXNrRm9ybU1vZGFsKHtcbiAgaXNPcGVuLFxuICBvbkNsb3NlLFxuICBvblN1Ym1pdCxcbiAgZWRpdGluZ1Rhc2sgPSBudWxsXG59KSB7XG4gIGNvbnN0IGlzRWRpdGluZyA9IEJvb2xlYW4oZWRpdGluZ1Rhc2spO1xuXG4gIGNvbnN0IFt0aXRsZSwgc2V0VGl0bGVdID0gdXNlU3RhdGUoJycpO1xuICBjb25zdCBbZGVzY3JpcHRpb24sIHNldERlc2NyaXB0aW9uXSA9IHVzZVN0YXRlKCcnKTtcbiAgY29uc3QgW2NhdGVnb3J5LCBzZXRDYXRlZ29yeV0gPSB1c2VTdGF0ZSgnRGVzaWduJyk7XG4gIGNvbnN0IFtzdGF0dXMsIHNldFN0YXR1c10gPSB1c2VTdGF0ZSgnVG8gZG8nKTtcbiAgY29uc3QgW3ByaW9yaXR5LCBzZXRQcmlvcml0eV0gPSB1c2VTdGF0ZSgnTWVkaXVtJyk7XG4gIGNvbnN0IFtkdWVEYXRlLCBzZXREdWVEYXRlXSA9IHVzZVN0YXRlKCcnKTtcbiAgY29uc3QgW2Vycm9ycywgc2V0RXJyb3JzXSA9IHVzZVN0YXRlKHt9KTtcblxuICBjb25zdCB0aXRsZUlucHV0UmVmID0gdXNlUmVmKG51bGwpO1xuXG4gIC8vIFRvZGF5J3MgSVNPIGRhdGUgc3RyaW5nIChZWVlZLU1NLUREKVxuICBjb25zdCBnZXRUb2RheURhdGUgPSAoKSA9PiB7XG4gICAgY29uc3QgdG9kYXkgPSBuZXcgRGF0ZSgpO1xuICAgIHJldHVybiB0b2RheS50b0lTT1N0cmluZygpLnNwbGl0KCdUJylbMF07XG4gIH07XG5cbiAgdXNlRWZmZWN0KCgpID0+IHtcbiAgICBpZiAoaXNPcGVuKSB7XG4gICAgICBpZiAoZWRpdGluZ1Rhc2spIHtcbiAgICAgICAgc2V0VGl0bGUoZWRpdGluZ1Rhc2sudGl0bGUgfHwgJycpO1xuICAgICAgICBzZXREZXNjcmlwdGlvbihlZGl0aW5nVGFzay5kZXNjcmlwdGlvbiB8fCAnJyk7XG4gICAgICAgIHNldENhdGVnb3J5KGVkaXRpbmdUYXNrLmNhdGVnb3J5IHx8ICdEZXNpZ24nKTtcbiAgICAgICAgc2V0U3RhdHVzKGVkaXRpbmdUYXNrLnN0YXR1cyB8fCAnVG8gZG8nKTtcbiAgICAgICAgc2V0UHJpb3JpdHkoZWRpdGluZ1Rhc2sucHJpb3JpdHkgfHwgJ01lZGl1bScpO1xuICAgICAgICBzZXREdWVEYXRlKGVkaXRpbmdUYXNrLmR1ZURhdGUgfHwgZ2V0VG9kYXlEYXRlKCkpO1xuICAgICAgfSBlbHNlIHtcbiAgICAgICAgLy8gUmVzZXQgZGVmYXVsdHNcbiAgICAgICAgc2V0VGl0bGUoJycpO1xuICAgICAgICBzZXREZXNjcmlwdGlvbignJyk7XG4gICAgICAgIHNldENhdGVnb3J5KCdEZXNpZ24nKTtcbiAgICAgICAgc2V0U3RhdHVzKCdUbyBkbycpO1xuICAgICAgICBzZXRQcmlvcml0eSgnTWVkaXVtJyk7XG4gICAgICAgIHNldER1ZURhdGUoZ2V0VG9kYXlEYXRlKCkpO1xuICAgICAgfVxuICAgICAgc2V0RXJyb3JzKHt9KTtcblxuICAgICAgLy8gRm9jdXMgZmlyc3QgaW5wdXRcbiAgICAgIHNldFRpbWVvdXQoKCkgPT4ge1xuICAgICAgICB0aXRsZUlucHV0UmVmLmN1cnJlbnQ/LmZvY3VzKCk7XG4gICAgICB9LCAxMDApO1xuICAgIH1cbiAgfSwgW2lzT3BlbiwgZWRpdGluZ1Rhc2tdKTtcblxuICAvLyBIYW5kbGUgZXNjYXBlIGtleVxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGZ1bmN0aW9uIGhhbmRsZUtleURvd24oZSkge1xuICAgICAgaWYgKGUua2V5ID09PSAnRXNjYXBlJyAmJiBpc09wZW4pIHtcbiAgICAgICAgb25DbG9zZSgpO1xuICAgICAgfVxuICAgIH1cbiAgICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcigna2V5ZG93bicsIGhhbmRsZUtleURvd24pO1xuICAgIHJldHVybiAoKSA9PiB3aW5kb3cucmVtb3ZlRXZlbnRMaXN0ZW5lcigna2V5ZG93bicsIGhhbmRsZUtleURvd24pO1xuICB9LCBbaXNPcGVuLCBvbkNsb3NlXSk7XG5cbiAgaWYgKCFpc09wZW4pIHJldHVybiBudWxsO1xuXG4gIGNvbnN0IGhhbmRsZVN1Ym1pdCA9IChlKSA9PiB7XG4gICAgZS5wcmV2ZW50RGVmYXVsdCgpO1xuXG4gICAgY29uc3QgdmFsaWRhdGlvbkVycm9ycyA9IHt9O1xuICAgIGNvbnN0IHRyaW1tZWRUaXRsZSA9IHRpdGxlLnRyaW0oKTtcblxuICAgIGlmICghdHJpbW1lZFRpdGxlKSB7XG4gICAgICB2YWxpZGF0aW9uRXJyb3JzLnRpdGxlID0gJ1Rhc2sgdGl0bGUgaXMgcmVxdWlyZWQgYW5kIGNhbm5vdCBiZSBlbXB0eS4nO1xuICAgIH1cblxuICAgIGlmICghZHVlRGF0ZSkge1xuICAgICAgdmFsaWRhdGlvbkVycm9ycy5kdWVEYXRlID0gJ0R1ZSBkYXRlIGlzIHJlcXVpcmVkLic7XG4gICAgfVxuXG4gICAgaWYgKE9iamVjdC5rZXlzKHZhbGlkYXRpb25FcnJvcnMpLmxlbmd0aCA+IDApIHtcbiAgICAgIHNldEVycm9ycyh2YWxpZGF0aW9uRXJyb3JzKTtcbiAgICAgIHJldHVybjtcbiAgICB9XG5cbiAgICBjb25zdCB0YXNrRGF0YSA9IHtcbiAgICAgIHRpdGxlOiB0cmltbWVkVGl0bGUsXG4gICAgICBkZXNjcmlwdGlvbjogZGVzY3JpcHRpb24udHJpbSgpLFxuICAgICAgY2F0ZWdvcnksXG4gICAgICBzdGF0dXMsXG4gICAgICBwcmlvcml0eSxcbiAgICAgIGR1ZURhdGVcbiAgICB9O1xuXG4gICAgaWYgKGlzRWRpdGluZykge1xuICAgICAgb25TdWJtaXQoe1xuICAgICAgICAuLi5lZGl0aW5nVGFzayxcbiAgICAgICAgLi4udGFza0RhdGFcbiAgICAgIH0pO1xuICAgIH0gZWxzZSB7XG4gICAgICBvblN1Ym1pdCh7XG4gICAgICAgIGlkOiBgdGFzay0ke0RhdGUubm93KCl9YCxcbiAgICAgICAgLi4udGFza0RhdGEsXG4gICAgICAgIHByb2dyZXNzOiBzdGF0dXMgPT09ICdDb21wbGV0ZWQnID8gMTAwIDogc3RhdHVzID09PSAnSW4gcHJvZ3Jlc3MnID8gNTAgOiAwXG4gICAgICB9KTtcbiAgICB9XG5cbiAgICBvbkNsb3NlKCk7XG4gIH07XG5cbiAgcmV0dXJuIChcbiAgICA8ZGl2IGNsYXNzTmFtZT1cIm1vZGFsLWJhY2tkcm9wXCIgb25DbGljaz17b25DbG9zZX0gcm9sZT1cInByZXNlbnRhdGlvblwiPlxuICAgICAgPGRpdiBcbiAgICAgICAgY2xhc3NOYW1lPVwibW9kYWwtY29udGFpbmVyIHRhc2stZm9ybS1tb2RhbFwiIFxuICAgICAgICBvbkNsaWNrPXsoZSkgPT4gZS5zdG9wUHJvcGFnYXRpb24oKX1cbiAgICAgICAgcm9sZT1cImRpYWxvZ1wiXG4gICAgICAgIGFyaWEtbW9kYWw9XCJ0cnVlXCJcbiAgICAgICAgYXJpYS1sYWJlbGxlZGJ5PVwibW9kYWwtZm9ybS10aXRsZVwiXG4gICAgICA+XG4gICAgICAgIHsvKiBNb2RhbCBIZWFkZXIgKi99XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibW9kYWwtaGVhZGVyXCI+XG4gICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgIDxoMiBpZD1cIm1vZGFsLWZvcm0tdGl0bGVcIiBjbGFzc05hbWU9XCJtb2RhbC10aXRsZVwiPlxuICAgICAgICAgICAgICB7aXNFZGl0aW5nID8gXCJFZGl0IHRhc2tcIiA6IFwiQ3JlYXRlIG5ldyB0YXNrXCJ9XG4gICAgICAgICAgICA8L2gyPlxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwibW9kYWwtc3VidGl0bGVcIj5cbiAgICAgICAgICAgICAge2lzRWRpdGluZyBcbiAgICAgICAgICAgICAgICA/IFwiVXBkYXRlIHlvdXIgdGFzayBkZXRhaWxzIGFuZCBtYWludGFpbiBwcm9ncmVzcy5cIiBcbiAgICAgICAgICAgICAgICA6IFwiQWRkIHlvdXIgdGFzayBkZXRhaWxzIHRvIHN0YXkgb24gdG9wIG9mIHlvdXIgd29yay5cIn1cbiAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgICAgIGNsYXNzTmFtZT1cIm1vZGFsLWNsb3NlLWJ0blwiXG4gICAgICAgICAgICBvbkNsaWNrPXtvbkNsb3NlfVxuICAgICAgICAgICAgYXJpYS1sYWJlbD1cIkNsb3NlIGRpYWxvZ1wiXG4gICAgICAgICAgPlxuICAgICAgICAgICAgPFggc2l6ZT17MjB9IC8+XG4gICAgICAgICAgPC9idXR0b24+XG4gICAgICAgIDwvZGl2PlxuXG4gICAgICAgIHsvKiBNb2RhbCBGb3JtICovfVxuICAgICAgICA8Zm9ybSBvblN1Ym1pdD17aGFuZGxlU3VibWl0fSBjbGFzc05hbWU9XCJ0YXNrLWZvcm1cIiBub1ZhbGlkYXRlPlxuICAgICAgICAgIHsvKiBUYXNrIFRpdGxlICovfVxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZm9ybS1ncm91cFwiPlxuICAgICAgICAgICAgPGxhYmVsIGh0bWxGb3I9XCJ0YXNrLXRpdGxlLWlucHV0XCIgY2xhc3NOYW1lPVwiZm9ybS1sYWJlbFwiPlxuICAgICAgICAgICAgICBUYXNrIHRpdGxlIDxzcGFuIGNsYXNzTmFtZT1cInJlcXVpcmVkLXN0YXJcIj4qPC9zcGFuPlxuICAgICAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgICAgIDxpbnB1dFxuICAgICAgICAgICAgICByZWY9e3RpdGxlSW5wdXRSZWZ9XG4gICAgICAgICAgICAgIGlkPVwidGFzay10aXRsZS1pbnB1dFwiXG4gICAgICAgICAgICAgIHR5cGU9XCJ0ZXh0XCJcbiAgICAgICAgICAgICAgY2xhc3NOYW1lPXtgZm9ybS1pbnB1dCAke2Vycm9ycy50aXRsZSA/ICdpbnB1dC1lcnJvcicgOiAnJ31gfVxuICAgICAgICAgICAgICBwbGFjZWhvbGRlcj1cImUuZy4gVXBkYXRlIHByaWNpbmcgcGFnZVwiXG4gICAgICAgICAgICAgIHZhbHVlPXt0aXRsZX1cbiAgICAgICAgICAgICAgb25DaGFuZ2U9eyhlKSA9PiB7XG4gICAgICAgICAgICAgICAgc2V0VGl0bGUoZS50YXJnZXQudmFsdWUpO1xuICAgICAgICAgICAgICAgIGlmIChlcnJvcnMudGl0bGUpIHNldEVycm9ycygocHJldikgPT4gKHsgLi4ucHJldiwgdGl0bGU6IG51bGwgfSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgICByZXF1aXJlZFxuICAgICAgICAgICAgICBhcmlhLWludmFsaWQ9e2Vycm9ycy50aXRsZSA/IFwidHJ1ZVwiIDogXCJmYWxzZVwifVxuICAgICAgICAgICAgICBhcmlhLWRlc2NyaWJlZGJ5PXtlcnJvcnMudGl0bGUgPyBcInRpdGxlLWVycm9yXCIgOiB1bmRlZmluZWR9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAge2Vycm9ycy50aXRsZSAmJiAoXG4gICAgICAgICAgICAgIDxwIGlkPVwidGl0bGUtZXJyb3JcIiBjbGFzc05hbWU9XCJlcnJvci1tZXNzYWdlXCI+XG4gICAgICAgICAgICAgICAgPEFsZXJ0Q2lyY2xlIHNpemU9ezE0fSAvPlxuICAgICAgICAgICAgICAgIDxzcGFuPntlcnJvcnMudGl0bGV9PC9zcGFuPlxuICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICApfVxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgey8qIERlc2NyaXB0aW9uICovfVxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZm9ybS1ncm91cFwiPlxuICAgICAgICAgICAgPGxhYmVsIGh0bWxGb3I9XCJ0YXNrLWRlc2MtaW5wdXRcIiBjbGFzc05hbWU9XCJmb3JtLWxhYmVsXCI+XG4gICAgICAgICAgICAgIERlc2NyaXB0aW9uXG4gICAgICAgICAgICA8L2xhYmVsPlxuICAgICAgICAgICAgPHRleHRhcmVhXG4gICAgICAgICAgICAgIGlkPVwidGFzay1kZXNjLWlucHV0XCJcbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiZm9ybS10ZXh0YXJlYVwiXG4gICAgICAgICAgICAgIHJvd3M9ezR9XG4gICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiQWRkIG5vdGVzIGFib3V0IHRoaXMgdGFzay4uLlwiXG4gICAgICAgICAgICAgIHZhbHVlPXtkZXNjcmlwdGlvbn1cbiAgICAgICAgICAgICAgb25DaGFuZ2U9eyhlKSA9PiBzZXREZXNjcmlwdGlvbihlLnRhcmdldC52YWx1ZSl9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgey8qIFN0YXR1cyAmIFByaW9yaXR5IEdyaWQgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmb3JtLXJvdy0yY29sXCI+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZvcm0tZ3JvdXBcIj5cbiAgICAgICAgICAgICAgPGxhYmVsIGh0bWxGb3I9XCJ0YXNrLXN0YXR1cy1zZWxlY3RcIiBjbGFzc05hbWU9XCJmb3JtLWxhYmVsXCI+XG4gICAgICAgICAgICAgICAgU3RhdHVzXG4gICAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgICAgIDxzZWxlY3RcbiAgICAgICAgICAgICAgICBpZD1cInRhc2stc3RhdHVzLXNlbGVjdFwiXG4gICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiZm9ybS1zZWxlY3RcIlxuICAgICAgICAgICAgICAgIHZhbHVlPXtzdGF0dXN9XG4gICAgICAgICAgICAgICAgb25DaGFuZ2U9eyhlKSA9PiBzZXRTdGF0dXMoZS50YXJnZXQudmFsdWUpfVxuICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAge1NUQVRVU0VTLm1hcCgoc3QpID0+IChcbiAgICAgICAgICAgICAgICAgIDxvcHRpb24ga2V5PXtzdH0gdmFsdWU9e3N0fT5cbiAgICAgICAgICAgICAgICAgICAge3N0fVxuICAgICAgICAgICAgICAgICAgPC9vcHRpb24+XG4gICAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICAgIDwvc2VsZWN0PlxuICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZm9ybS1ncm91cFwiPlxuICAgICAgICAgICAgICA8bGFiZWwgaHRtbEZvcj1cInRhc2stcHJpb3JpdHktc2VsZWN0XCIgY2xhc3NOYW1lPVwiZm9ybS1sYWJlbFwiPlxuICAgICAgICAgICAgICAgIFByaW9yaXR5XG4gICAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgICAgIDxzZWxlY3RcbiAgICAgICAgICAgICAgICBpZD1cInRhc2stcHJpb3JpdHktc2VsZWN0XCJcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJmb3JtLXNlbGVjdFwiXG4gICAgICAgICAgICAgICAgdmFsdWU9e3ByaW9yaXR5fVxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0UHJpb3JpdHkoZS50YXJnZXQudmFsdWUpfVxuICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAge1BSSU9SSVRJRVMubWFwKChwKSA9PiAoXG4gICAgICAgICAgICAgICAgICA8b3B0aW9uIGtleT17cH0gdmFsdWU9e3B9PlxuICAgICAgICAgICAgICAgICAgICB7cH1cbiAgICAgICAgICAgICAgICAgIDwvb3B0aW9uPlxuICAgICAgICAgICAgICAgICkpfVxuICAgICAgICAgICAgICA8L3NlbGVjdD5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgey8qIENhdGVnb3J5ICYgRHVlIERhdGUgR3JpZCAqL31cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZvcm0tcm93LTJjb2xcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZm9ybS1ncm91cFwiPlxuICAgICAgICAgICAgICA8bGFiZWwgaHRtbEZvcj1cInRhc2stY2F0ZWdvcnktc2VsZWN0XCIgY2xhc3NOYW1lPVwiZm9ybS1sYWJlbFwiPlxuICAgICAgICAgICAgICAgIENhdGVnb3J5XG4gICAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgICAgIDxzZWxlY3RcbiAgICAgICAgICAgICAgICBpZD1cInRhc2stY2F0ZWdvcnktc2VsZWN0XCJcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJmb3JtLXNlbGVjdFwiXG4gICAgICAgICAgICAgICAgdmFsdWU9e2NhdGVnb3J5fVxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0Q2F0ZWdvcnkoZS50YXJnZXQudmFsdWUpfVxuICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAge0NBVEVHT1JJRVMubWFwKChjYXQpID0+IChcbiAgICAgICAgICAgICAgICAgIDxvcHRpb24ga2V5PXtjYXR9IHZhbHVlPXtjYXR9PlxuICAgICAgICAgICAgICAgICAgICB7Y2F0fVxuICAgICAgICAgICAgICAgICAgPC9vcHRpb24+XG4gICAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICAgIDwvc2VsZWN0PlxuICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZm9ybS1ncm91cFwiPlxuICAgICAgICAgICAgICA8bGFiZWwgaHRtbEZvcj1cInRhc2stZHVlLWRhdGUtaW5wdXRcIiBjbGFzc05hbWU9XCJmb3JtLWxhYmVsXCI+XG4gICAgICAgICAgICAgICAgRHVlIGRhdGUgPHNwYW4gY2xhc3NOYW1lPVwicmVxdWlyZWQtc3RhclwiPio8L3NwYW4+XG4gICAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgICAgIDxpbnB1dFxuICAgICAgICAgICAgICAgIGlkPVwidGFzay1kdWUtZGF0ZS1pbnB1dFwiXG4gICAgICAgICAgICAgICAgdHlwZT1cImRhdGVcIlxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT17YGZvcm0taW5wdXQgJHtlcnJvcnMuZHVlRGF0ZSA/ICdpbnB1dC1lcnJvcicgOiAnJ31gfVxuICAgICAgICAgICAgICAgIHZhbHVlPXtkdWVEYXRlfVxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4ge1xuICAgICAgICAgICAgICAgICAgc2V0RHVlRGF0ZShlLnRhcmdldC52YWx1ZSk7XG4gICAgICAgICAgICAgICAgICBpZiAoZXJyb3JzLmR1ZURhdGUpIHNldEVycm9ycygocHJldikgPT4gKHsgLi4ucHJldiwgZHVlRGF0ZTogbnVsbCB9KSk7XG4gICAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgICAgICByZXF1aXJlZFxuICAgICAgICAgICAgICAgIGFyaWEtaW52YWxpZD17ZXJyb3JzLmR1ZURhdGUgPyBcInRydWVcIiA6IFwiZmFsc2VcIn1cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICAge2Vycm9ycy5kdWVEYXRlICYmIChcbiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJlcnJvci1tZXNzYWdlXCI+XG4gICAgICAgICAgICAgICAgICA8QWxlcnRDaXJjbGUgc2l6ZT17MTR9IC8+XG4gICAgICAgICAgICAgICAgICA8c3Bhbj57ZXJyb3JzLmR1ZURhdGV9PC9zcGFuPlxuICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgKX1cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmb3JtLW5vdGVcIj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInJlcXVpcmVkLXN0YXJcIj4qPC9zcGFuPiBSZXF1aXJlZCBmaWVsZC5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIHsvKiBGb290ZXIgQWN0aW9ucyAqL31cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm1vZGFsLWZvb3RlclwiPlxuICAgICAgICAgICAgPGJ1dHRvblxuICAgICAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwibW9kYWwtY2FuY2VsLWJ0blwiXG4gICAgICAgICAgICAgIG9uQ2xpY2s9e29uQ2xvc2V9XG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIENhbmNlbFxuICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICAgIHR5cGU9XCJzdWJtaXRcIlxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJtb2RhbC1zdWJtaXQtYnRuXCJcbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAge2lzRWRpdGluZyA/IFwiU2F2ZSBjaGFuZ2VzXCIgOiBcIkNyZWF0ZSB0YXNrXCJ9XG4gICAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9mb3JtPlxuICAgICAgPC9kaXY+XG4gICAgPC9kaXY+XG4gICk7XG59XG4iXSwiZmlsZSI6IkQ6L3Rhc2sgbWFuYWdlbWVudCBkYXNoYm9hcmQvc3JjL2NvbXBvbmVudHMvVGFza0Zvcm1Nb2RhbC5qc3gifQ==

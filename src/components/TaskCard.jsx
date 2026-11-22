@@ -151,7 +151,7 @@ export default function TaskCard({
         </button>
 
         {menuOpen && (
-          <div className="task-dropdown-menu" role="menu">
+          <div className="task-dropdown-menu" role="menu" onMouseDown={(e) => e.stopPropagation()}>
             <div className="dropdown-section-title">Change Status</div>
             <button
               type="button"
@@ -197,8 +197,8 @@ export default function TaskCard({
               className="dropdown-menu-item"
               role="menuitem"
               onClick={() => {
-                setMenuOpen(false);
                 onEdit(task);
+                setMenuOpen(false);
               }}
             >
               <Edit3 size={14} />
@@ -210,8 +210,8 @@ export default function TaskCard({
               className="dropdown-menu-item delete-item"
               role="menuitem"
               onClick={() => {
-                setMenuOpen(false);
                 onDelete(task);
+                setMenuOpen(false);
               }}
             >
               <Trash2 size={14} />
